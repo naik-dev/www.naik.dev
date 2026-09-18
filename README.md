@@ -24,8 +24,8 @@ Open `http://localhost:8099`.
 The site has no build step, package dependencies, analytics, tracking, or
 external runtime assets.
 
-## Current domain state
+## Hosting
 
-As of 18 September 2026, `www.naik.dev` serves an older GitHub Pages website.
-This new project has not been published and does not change the current domain.
-
+This project is intended for the public GitHub repository
+`naik-dev/www.naik.dev`. The `CNAME` file assigns GitHub Pages to
+`www.naik.dev`.

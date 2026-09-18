@@ -22,15 +22,12 @@ separate `/Users/shrnaik/dev/naikdev` folder.
 
 ## Deployment
 
-No hosting project or repository has been created yet. The existing
-`www.naik.dev` site should remain untouched until this project is reviewed and a
-development hostname is selected.
+The project is stored in the public GitHub repository
+`naik-dev/www.naik.dev`. GitHub Pages serves the repository root from `main`,
+and the committed `CNAME` file assigns the custom domain `www.naik.dev`.
 
-Suggested next step:
+Changes pushed to `main` should be reviewed locally before publication:
 
-1. Review locally.
-2. Replace placeholder copy with final content.
-3. Create a private GitHub repository.
-4. Deploy to a development hostname such as `dev.naik.dev`.
-5. Move `www.naik.dev` only after explicit approval.
-
+```sh
+python3 -m http.server 8099
+```

@@ -23,10 +23,12 @@ separate `/Users/shrnaik/dev/naikdev` folder.
 ## Deployment
 
 The project is stored in the public GitHub repository
-`naik-dev/www.naik.dev`. GitHub Pages serves the repository root from `main`,
-and the committed `CNAME` file assigns the custom domain `www.naik.dev`.
+`naik-dev/www.naik.dev`. GitHub is used only for source control; GitHub Pages
+must remain disabled.
 
-Changes pushed to `main` should be reviewed locally before publication:
+The website should be deployed through Cloudflare Pages and assigned to
+`www.naik.dev`. Changes pushed to `main` should be reviewed locally before
+publication:
 
 ```sh
 python3 -m http.server 8099

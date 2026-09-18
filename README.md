@@ -27,5 +27,5 @@ external runtime assets.
 ## Hosting
 
 This project is intended for the public GitHub repository
-`naik-dev/www.naik.dev`. The `CNAME` file assigns GitHub Pages to
-`www.naik.dev`.
+`naik-dev/www.naik.dev`. GitHub stores the source code only. The website is
+hosted separately on Cloudflare Pages.

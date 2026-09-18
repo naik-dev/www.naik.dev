@@ -26,9 +26,22 @@ The project is stored in the public GitHub repository
 `naik-dev/www.naik.dev`. GitHub is used only for source control; GitHub Pages
 must remain disabled.
 
-The website should be deployed through Cloudflare Pages and assigned to
-`www.naik.dev`. Changes pushed to `main` should be reviewed locally before
-publication:
+Cloudflare configuration:
+
+- Account ID: `206af19c8ad658c40528f31e39cf6ca6`
+- Pages project: `www-naik-dev`
+- Pages hostname: `www-naik-dev.pages.dev`
+- Custom domain: `www.naik.dev`
+- DNS: proxied CNAME from `www` to `www-naik-dev.pages.dev`
+
+The current Pages project uses Direct Upload. Git pushes do not deploy
+automatically. Deploy the current working tree with:
+
+```sh
+./scripts/deploy-cloudflare.sh
+```
+
+Changes pushed to `main` should be reviewed locally before publication:
 
 ```sh
 python3 -m http.server 8099

@@ -1,0 +1,81 @@
+const digits = {
+  hourOne: document.querySelector("#hour-one"),
+  hourTwo: document.querySelector("#hour-two"),
+  minuteOne: document.querySelector("#minute-one"),
+  minuteTwo: document.querySelector("#minute-two")
+};
+
+const dateLabel = document.querySelector("#date-label");
+const secondsLabel = document.querySelector("#seconds-label");
+const secondsProgress = document.querySelector("#seconds-progress");
+const yearLabel = document.querySelector("#year-label");
+const themeToggle = document.querySelector(".theme-toggle");
+
+const timeFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false
+});
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  weekday: "long",
+  day: "numeric",
+  month: "long"
+});
+
+const yearFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric"
+});
+
+let previousTime = "";
+
+function setDigit(element, value) {
+  if (element.textContent === value) return;
+  element.textContent = value;
+  element.classList.remove("tick");
+  requestAnimationFrame(() => element.classList.add("tick"));
+}
+
+function updateClock() {
+  const now = new Date();
+  const parts = Object.fromEntries(
+    timeFormatter.formatToParts(now)
+      .filter(part => part.type !== "literal")
+      .map(part => [part.type, part.value])
+  );
+  const time = `${parts.hour}${parts.minute}`;
+
+  if (time !== previousTime) {
+    setDigit(digits.hourOne, parts.hour[0]);
+    setDigit(digits.hourTwo, parts.hour[1]);
+    setDigit(digits.minuteOne, parts.minute[0]);
+    setDigit(digits.minuteTwo, parts.minute[1]);
+    previousTime = time;
+  }
+
+  const seconds = Number(parts.second);
+  secondsLabel.textContent = `${parts.second} seconds`;
+  secondsProgress.style.width = `${((seconds + 1) / 60) * 100}%`;
+  dateLabel.textContent = dateFormatter.format(now);
+  yearLabel.textContent = yearFormatter.format(now);
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem("naik-theme", theme);
+}
+
+const storedTheme = localStorage.getItem("naik-theme");
+const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+applyTheme(storedTheme || preferredTheme);
+
+themeToggle.addEventListener("click", () => {
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+});
+
+updateClock();
+setInterval(updateClock, 1000);

@@ -101,6 +101,9 @@ The deployment script validates the project, stages only the four public files,
 and uploads them to the existing Cloudflare Pages project. Wrangler may request
 Cloudflare OAuth authorization if the local session has expired.
 
+The proposed GitHub Actions deployment requires `CLOUDFLARE_API_TOKEN`, with
+Cloudflare Pages edit access, and `CLOUDFLARE_ACCOUNT_ID` as repository secrets.
+
 ## Repository
 
 The source repository is public at `naik-dev/www.naik.dev`. Pushes to `main` do

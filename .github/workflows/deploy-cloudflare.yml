@@ -1,0 +1,42 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check website
+        run: ./scripts/check.sh
+
+      - name: Stage public files
+        run: |
+          mkdir dist
+          cp index.html styles.css app.js favicon.svg dist/
+
+      - name: Deploy
+        run: >
+          npx wrangler@4 pages deploy dist
+          --project-name www-naik-dev
+          --branch main
+          --commit-hash "${{ github.sha }}"
+          --commit-message "${{ github.event.head_commit.message || 'Manual deployment' }}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

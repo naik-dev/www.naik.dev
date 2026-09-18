@@ -33,11 +33,44 @@ const yearFormatter = new Intl.DateTimeFormat("en-GB", {
 
 let previousTime = "";
 
+function initialiseFlipCard(element) {
+  const value = element.dataset.value || "0";
+  element.innerHTML = `
+    <span class="card-half top" aria-hidden="true"><span class="card-value">${value}</span></span>
+    <span class="card-half bottom" aria-hidden="true"><span class="card-value">${value}</span></span>
+    <span class="flip-half top" aria-hidden="true"><span class="card-value">${value}</span></span>
+    <span class="flip-half bottom" aria-hidden="true"><span class="card-value">${value}</span></span>
+  `;
+}
+
 function setDigit(element, value) {
-  if (element.textContent === value) return;
-  element.textContent = value;
-  element.classList.remove("tick");
-  requestAnimationFrame(() => element.classList.add("tick"));
+  const currentValue = element.dataset.value;
+  if (currentValue === value || element.classList.contains("flipping")) return;
+
+  const staticTop = element.querySelector(".card-half.top .card-value");
+  const staticBottom = element.querySelector(".card-half.bottom .card-value");
+  const flipTop = element.querySelector(".flip-half.top .card-value");
+  const flipBottom = element.querySelector(".flip-half.bottom .card-value");
+
+  staticTop.textContent = currentValue;
+  staticBottom.textContent = value;
+  flipTop.textContent = currentValue;
+  flipBottom.textContent = value;
+  element.classList.add("flipping");
+
+  const finishFlip = () => {
+    element.dataset.value = value;
+    element.setAttribute("aria-label", value);
+    staticTop.textContent = value;
+    staticBottom.textContent = value;
+    element.classList.remove("flipping");
+  };
+
+  element.querySelector(".flip-half.bottom")
+    .addEventListener("animationend", finishFlip, { once: true });
+  window.setTimeout(() => {
+    if (element.classList.contains("flipping")) finishFlip();
+  }, 750);
 }
 
 function updateClock() {
@@ -72,6 +105,8 @@ function applyTheme(theme) {
 const storedTheme = localStorage.getItem("naik-theme");
 const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 applyTheme(storedTheme || preferredTheme);
+
+Object.values(digits).forEach(initialiseFlipCard);
 
 themeToggle.addEventListener("click", () => {
   applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");

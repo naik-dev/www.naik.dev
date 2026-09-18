@@ -10,6 +10,9 @@ const secondsLabel = document.querySelector("#seconds-label");
 const secondsProgress = document.querySelector("#seconds-progress");
 const yearLabel = document.querySelector("#year-label");
 const themeToggle = document.querySelector(".theme-toggle");
+const menuToggle = document.querySelector(".menu-toggle");
+const menuLinks = [...document.querySelectorAll("#main-nav a")];
+const timeAnnouncement = document.querySelector("#time-announcement");
 
 const timeFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Europe/London",
@@ -88,6 +91,7 @@ function updateClock() {
     setDigit(digits.minuteOne, parts.minute[0]);
     setDigit(digits.minuteTwo, parts.minute[1]);
     previousTime = time;
+    timeAnnouncement.textContent = `Current time in London: ${parts.hour}:${parts.minute}`;
   }
 
   const seconds = Number(parts.second);
@@ -100,6 +104,9 @@ function updateClock() {
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   localStorage.setItem("naik-theme", theme);
+  const dark = theme === "dark";
+  themeToggle.setAttribute("aria-pressed", String(dark));
+  themeToggle.setAttribute("aria-label", dark ? "Use light theme" : "Use dark theme");
 }
 
 const storedTheme = localStorage.getItem("naik-theme");
@@ -111,6 +118,18 @@ Object.values(digits).forEach(initialiseFlipCard);
 themeToggle.addEventListener("click", () => {
   applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
 });
+
+menuToggle.addEventListener("click", () => {
+  const open = document.body.classList.toggle("menu-open");
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+});
+
+menuLinks.forEach(link => link.addEventListener("click", () => {
+  document.body.classList.remove("menu-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open menu");
+}));
 
 updateClock();
 setInterval(updateClock, 1000);
